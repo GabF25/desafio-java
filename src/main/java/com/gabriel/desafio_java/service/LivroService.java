@@ -40,6 +40,11 @@ public class LivroService {
         LivroEntity entity = livroRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Livro não encontrado"));
 
+        if (!entity.getTitulo().equalsIgnoreCase(request.titulo())
+                && livroRepository.existsByTituloIgnoreCase(request.titulo())) {
+            throw new IllegalStateException("Já existe um livro com o título: " + request.titulo());
+        }
+
         entity.setTitulo(request.titulo());
         entity.setAutor(request.autor());
         entity.setAnoPublicacao(request.anoPublicacao());
